@@ -7,10 +7,6 @@ let networkStations = new Schema({
     }],
     href: String,
     id: String,
-    licence:{
-        name: String,
-        url: String
-    },
     location:{
         city: String,
         country: String,
@@ -34,7 +30,7 @@ let networkStations = new Schema({
         latitude: Number,
         longitude: Number,
         name: String,
-        timestamp: String
+        timestamp: Date
     }]
 });
 
