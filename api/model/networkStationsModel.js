@@ -7,10 +7,6 @@ let networkStations = new Schema({
     }],
     href: String,
     id: String,
-    licence:{
-        name: String,
-        url: String
-    },
     location:{
         city: String,
         country: String,
@@ -20,21 +16,12 @@ let networkStations = new Schema({
     name: String,
     stations:[{
         empty_slots: Number,
-        extra:{
-            address: String,
-            banking: Boolean,
-            bonus: Boolean,
-            last_update: Number,
-            slots: Number,
-            status: String,
-            uid: Number
-        },
         free_bikes: Number,
         id: String,
         latitude: Number,
         longitude: Number,
         name: String,
-        timestamp: String
+        timestamp: Date
     }]
 });
 
