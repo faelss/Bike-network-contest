@@ -37,3 +37,5 @@ let networkStations = new Schema({
         timestamp: String
     }]
 });
+
+module.exports = mongoose.model('NetworksStations',networkStations);
