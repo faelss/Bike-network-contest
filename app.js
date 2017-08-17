@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
 const Network = require('./api/model/networksModel');
+const NetworkStation = require('./api/model/networkStationsModel');
 const route = require('./api/route/networkRoute');
 
 let port = process.env.PORT || 8000;
