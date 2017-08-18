@@ -16,13 +16,13 @@ let networkStations = new Schema({
     name: String,
     stations:[{
         report:{
-            status:{
-                default: "OPEN",
-                type: String
+            statusLocation:{
+                status: { type: String , default: 'OPEN' },
+                count: { type: Number , default: 0 }
             },
-            count:{
-                default: 0,
-                type: Number
+            safeLocation:{
+                status: { type: Boolean , default: 'true'},
+                count: { type: Number , default: 0 }
             }
         },
         empty_slots: Number,

@@ -51,7 +51,7 @@ class NetworkController {
             'stations.id': req.params.idStation
         }, {
             $set:{
-                'stations.$.report.count': req.body.count
+                'stations.$.report.safeLocation.count': req.body.count
             }
         }, {
             new: true
@@ -60,6 +60,10 @@ class NetworkController {
         }).catch((err) => {
             res.send(err);
         });
+    }
+
+    static updateStatusSafe(req, res) {
+        //todo later
     }
 	
 }
