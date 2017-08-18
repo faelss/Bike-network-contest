@@ -64,7 +64,7 @@ class NetworkController {
 
     static updateSafeLocationCount(req, res) {
         NetworkStation
-        .findByIdAndUpdate({
+        .findOneAndUpdate({
             id: req.params.id,
             'stations.id': req.params.idStation
         },{
