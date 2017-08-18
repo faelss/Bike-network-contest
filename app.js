@@ -9,7 +9,7 @@ const route = require('./api/route/networkRoute');
 let port = process.env.PORT || 8000;
 
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost/networkBike', { useMongoClient: true});
+mongoose.connect('mongodb://localhost/networksBike', { useMongoClient: true});
 
 app = express();
 

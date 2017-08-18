@@ -15,6 +15,16 @@ let networkStations = new Schema({
     },
     name: String,
     stations:[{
+        report:{
+            status:{
+                default: "OPEN",
+                type: String
+            },
+            count:{
+                default: 0,
+                type: Number
+            }
+        },
         empty_slots: Number,
         free_bikes: Number,
         id: String,
