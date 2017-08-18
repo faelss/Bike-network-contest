@@ -12,9 +12,9 @@ module.exports = function(app) {
 		.patch(controller.updateAvailableSlots);
 		
 	app.route('/networks/:id/stations/:idStation/report/status')		
-		.patch(controller.updateStatus);
+		.patch(controller.updateStatusLocationCount);
 
 	app.route('/networks/:id/stations/:idStation/report/safe')
-		.patch(controller.updateStatusSafe);
+		.patch(controller.updateSafeLocationCount);
 
 };

@@ -44,14 +44,14 @@ class NetworkController {
         });
 	}
 
-	static updateStatus(req, res) {
+	static updateStatusLocationCount(req, res) {
         NetworkStation
         .findOneAndUpdate({
             id: req.params.id,
             'stations.id': req.params.idStation
         }, {
             $set:{
-                'stations.$.report.safeLocation.count': req.body.count
+                'stations.$.report.statusLocation.count': req.body.count
             }
         }, {
             new: true
@@ -62,8 +62,22 @@ class NetworkController {
         });
     }
 
-    static updateStatusSafe(req, res) {
-        //todo later
+    static updateSafeLocationCount(req, res) {
+        NetworkStation
+        .findByIdAndUpdate({
+            id: req.params.id,
+            'stations.id': req.params.idStation
+        },{
+            $set:{
+                'stations.$.report.safeLocation.count': req.body.count
+            }
+        },{
+            new: true
+        }).then((data) => {
+            res.json(data);
+        }).catch((err) => {
+            res.send(err);
+        });
     }
 	
 }
