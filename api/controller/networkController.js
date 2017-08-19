@@ -79,6 +79,25 @@ class NetworkController {
             res.send(err);
         });
     }
+
+    static updateReview(req, res) {
+        NetworkStation
+        .findOneAndUpdate({
+            id: req.params.id,
+            'stations.id': req.params.idStation
+        },{
+            $set:{
+                'stations.$.review': req.body.review
+            }
+        },{
+            new: true
+        }).then((data) => {
+            res.json(data);
+        }).catch((err) => {
+            res.send(err);
+        });
+    
+    }
 	
 }
 

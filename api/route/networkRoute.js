@@ -17,4 +17,7 @@ module.exports = function(app) {
 	app.route('/networks/:id/stations/:idStation/report/safe')
 		.patch(controller.updateSafeLocationCount);
 
+	app.route('/networks/:id/stations/:idStation/review')
+		.put(controller.updateReview);
+
 };
