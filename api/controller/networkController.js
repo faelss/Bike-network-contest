@@ -51,7 +51,7 @@ class NetworkController {
             'stations.id': req.params.idStation
         }, {
             $set:{
-                'stations.$.report.statusLocation.count': req.body.count
+                'stations.$.report.status_location.count': req.body.count
             }
         }, {
             new: true
@@ -69,7 +69,7 @@ class NetworkController {
             'stations.id': req.params.idStation
         },{
             $set:{
-                'stations.$.report.safeLocation.count': req.body.count
+                'stations.$.report.safe_location.count': req.body.count
             }
         },{
             new: true

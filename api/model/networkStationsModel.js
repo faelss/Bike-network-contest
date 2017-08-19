@@ -17,11 +17,11 @@ let networkStations = new Schema({
     stations:[{
         report:{
             status_location:{
-                status: { type: Boolean , default: 'true'},
+                status: { type: Boolean , default: true},
                 count: { type: Number , default: 0 }
             },
             safe_location:{
-                status: { type: Boolean , default: 'true'},
+                status: { type: Boolean , default: true},
                 count: { type: Number , default: 0 }
             }
         },
