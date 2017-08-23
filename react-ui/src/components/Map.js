@@ -1,20 +1,21 @@
 import React, { Component } from 'react';
-import ReactMapGL from 'react-map-gl';
+import ReactMapGL, { NavigationControl } from 'react-map-gl';
 
 class Map extends Component {
 	render() {
+		const { viewport, updateViewport } = this.props;
 		return (
 			<ReactMapGL 
-				width={800}
-				height={600}
-				latitude={37.7577}
-	        	longitude={-122.4376}
-	        	zoom={8}
-	        	onViewportChange={(viewport) => {
-		          const {width, height, latitude, longitude, zoom} = viewport;
-		          // Optionally call `setState` and use the state to update the map.
-		        }}
-		    />
+				width={viewport.width}
+				height={viewport.height}
+				latitude={viewport.latitude}
+	        	longitude={viewport.longitude}
+	        	zoom={viewport.zoom}
+	        	onViewportChange={updateViewport}>
+	        	<div style={{position: 'absolute', right: 0}}>
+	        		<NavigationControl onViewportChange={updateViewport}/>
+	        	</div>
+		    </ReactMapGL>
 		);
 	}
 }
