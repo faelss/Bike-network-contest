@@ -12,7 +12,10 @@ class App extends Component {
 				height: window.innerHeight,
 				latitude: 40.737,
 				longitude: -73.923,
-				zoom: 2
+				zoom: 1
+			},
+			style: {
+				streets: 'mapbox://styles/mapbox/streets-v9'
 			}
 		};
 	}
@@ -26,7 +29,11 @@ class App extends Component {
   	render() {
 
 	    return (
-	      <Map viewport={this.state.viewport} updateViewport={this._updateViewport.bind(this, )}/>
+	      <Map 
+	      	viewport={this.state.viewport}
+	      	updateViewport={this._updateViewport.bind(this)}
+	      	style={this.state.style}
+	      	/>
 	    );
   	}
 }
