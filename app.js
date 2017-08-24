@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 const Network = require('./api/model/networksModel');
 const NetworkStation = require('./api/model/networkStationsModel');
@@ -15,12 +16,9 @@ app = express();
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(cors());
 
 route(app);
-
-app.get('/', (req, res, next) => {
-	res.send('Network API !');
-});
 
 app.listen(port, () => {
 	console.log('Server started on: ' + port);
