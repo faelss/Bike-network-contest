@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import MapGl from 'react-map-gl';
+import MapGl, { NavigationControl } from 'react-map-gl';
 
 import { json as requestJson } from 'd3-request';
 import { fromJS } from 'immutable';
@@ -96,7 +96,9 @@ class App extends Component {
 				onViewportChange={this._onViewportChange.bind(this)}
 				onHover={this._onHover.bind(this)}
 				>
-	
+				<div style={{position: 'absolute', right: 0}}>
+					<NavigationControl onViewportChange={this._onViewportChange.bind(this)}/>
+				</div>
 				{this._renderInfo()}
 
 			</MapGl>
