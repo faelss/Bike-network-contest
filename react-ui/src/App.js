@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import MapGl, { NavigationControl } from 'react-map-gl';
 
-import { json as requestJson } from 'd3-request';
+import axios from 'axios';
 import { fromJS } from 'immutable';
 
-import { defaultMapStyle, dataLayer } from './map-style.js'
-import makeGeojson from './utils.js';
+import { defaultMapStyle, dataLayer, stationLayer } from './map/map-style'
+import { makeGeojsonNetwork, makeGeojsonStation, flyBounds } from './utils';
+
+import NetworkInfo from './components/NetworkInfo';
+import StationInfo from './components/StationInfo';
 
 class App extends Component {
 
@@ -15,6 +18,7 @@ class App extends Component {
 		this.state = {
 			mapStyle: defaultMapStyle,
 			data: null,
+			display: true,
 			hoveredFeature: null,
 			viewport: {
 				latitude: 40,
@@ -28,17 +32,26 @@ class App extends Component {
 		};
 	}
 
+	_fetchNetworks() {
+		axios
+			.get('http://localhost:8000/networks')
+			.then((res) => {
+				this._loadDataNetworks(makeGeojsonNetwork(res.data));
+			});
+	}
+
+	_fetchStation(id) {
+		axios
+			.get(`http://localhost:8000/networks/${id}`)
+			.then((res) => {
+				this._loadDataStation(makeGeojsonStation(res.data));
+			});
+	}
+
 	componentDidMount() {
 		window.addEventListener('resize', this._resize.bind(this));
 		this._resize();
-		
-		requestJson('http://localhost:8000/networks', (err, res) => {
-			if (!err) {
-				this._loadData(makeGeojson(res));
-			} else {
-				console.log('ERROR requestJson');
-			}
-		});
+		this._fetchNetworks();
 	}
 
 	componentWillUnmount() {
@@ -55,7 +68,28 @@ class App extends Component {
 		});
 	}
 
-	_loadData(data) {
+	_loadDataStation(data) {
+		const { display, viewport: { width, height } } = this.state;
+
+		const mapStyle = defaultMapStyle
+				.setIn(['sources', 'stations'], fromJS({type: 'geojson', data}))
+				.set('layers', defaultMapStyle.get('layers').push(stationLayer));
+
+		const viewport = flyBounds(
+			width, 
+			height, 
+			data.features
+		);
+
+   		this.setState({ 
+   			viewport,
+   			display: !display,
+   			data,
+   			mapStyle
+   		});
+	}
+
+	_loadDataNetworks(data) {
 		const mapStyle = defaultMapStyle
 			      .setIn(['sources', 'networks'], fromJS({type: 'geojson', data}))
 			      .set('layers', defaultMapStyle.get('layers').push(dataLayer));
@@ -69,25 +103,23 @@ class App extends Component {
 
 	_onHover(event) {
 		const { features, srcEvent: { offsetX, offsetY }} = event;
-		const hoveredFeature = features && features.find(f => f.layer.id === 'data');
+		const { display } = this.state;
+
+		const hoveredFeature = features && features.find(f => f.layer.id === (display ? 'network' : 'station'));
 		this.setState({ hoveredFeature, x: offsetX, y: offsetY });
 	}
 
-	_renderInfo() {
-		const { hoveredFeature, x, y} = this.state;
-
-		return hoveredFeature && (
-			<div className='tooltip' style={{ left: x, top: y}}>
-				<div>Company: {hoveredFeature.properties.company} </div>
-				<div>Country: {hoveredFeature.properties.country} </div>
-				<div>City: {hoveredFeature.properties.city}</div>
-			</div>
-		);
+	_onClick(event) {
+		const { features } = event;
+		const { display } = this.state;
+		if (!display) return;
+		const clickFeature = features  && features.find(f => f.layer.id === 'network');
+		if (clickFeature) this._fetchStation(clickFeature.properties.id);
 	}
 
 
 	render() {
-		const { viewport, mapStyle } = this.state;
+		const { viewport, mapStyle, display, hoveredFeature, x, y } = this.state;
 
 		return (
 			<MapGl
@@ -95,12 +127,23 @@ class App extends Component {
 				mapStyle={mapStyle}
 				onViewportChange={this._onViewportChange.bind(this)}
 				onHover={this._onHover.bind(this)}
+				onClick={this._onClick.bind(this)}
 				>
 				<div style={{position: 'absolute', right: 0}}>
 					<NavigationControl onViewportChange={this._onViewportChange.bind(this)}/>
 				</div>
-				{this._renderInfo()}
-
+				<NetworkInfo 
+					info={hoveredFeature} 
+					left={x} 
+					top={y}
+					display={display}
+				/>
+				<StationInfo
+					info={hoveredFeature} 
+					left={x} 
+					top={y}
+					display={!display}
+				/>
 			</MapGl>
 		);
 	}

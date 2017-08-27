@@ -1,0 +1,27 @@
+import React, { PureComponent } from 'react';
+
+export default class NetworkInfo extends PureComponent {
+
+	_renderInfo() {
+		const {display, info, left, top} = this.props;
+
+		if (display) {
+			return info && (
+				<div className='tooltip' style={{ left, top }}>
+					<div>Name: {info.properties.name} </div>
+					<div>Country: {info.properties.country} </div>
+					<div>City: {info.properties.city}</div>
+				</div>
+			);
+		}
+	}
+
+	render() {
+
+		return (
+			<div>
+				{this._renderInfo()}
+			</div>
+		);
+	}
+}

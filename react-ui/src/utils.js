@@ -1,35 +1,66 @@
-function makeGeojson(data) {
-	
-	let geojson = {
+import {PerspectiveMercatorViewport} from 'viewport-mercator-project'; 
+
+export function makeGeojsonNetwork(data) {
+
+	return {
 		type: 'FeatureCollection',
-		features: []
-	};
-
-	for (let index in data) {
-
-		let lat = data[index].location.latitude;
-		let lon = data[index].location.longitude;
-
-		let obj = {
-			type: 'Feature',
-			properties: {
-				city: data[index].location.city,
-				country: data[index].location.country,
-				company: []
-			},
-			geometry: {
-				coordinates: [lon, lat],
-				type: 'Point'
+		features: data.map((d) => {
+			return {
+				type: 'Feature',
+				properties: {
+					id: d.id,
+					city: d.location.city,
+					country: d.location.country,
+					name: d.name
+				},
+				geometry:{
+					coordinates: [d.location.longitude, d.location.latitude],
+					type: 'Point'
+				}
 			}
-		};
-
-		if (data[index].company != null)
-			obj.properties.company = data[index].company.slice();
-
-		geojson.features.push(obj);
+		})
 	}
-
-	return geojson;
 }
 
-export default makeGeojson;
+export function makeGeojsonStation(data) {
+
+	// bug
+	if (data.constructor === Array) data = data[0];
+
+	return {
+		type: 'FeatureCollection',
+		features: data.stations.map((s) => {
+			return {
+				type: 'Feature',
+				properties: {
+					name: s.name,
+					empty_slots: s.empty_slots,
+					free_bikes: s.free_bikes,
+					review: s.review.slice(),
+					report: {
+						safe_location: {
+							count: s.report.safe_location.count, 
+							status: s.report.safe_location.status
+						},
+						status_location: {
+							count: s.report.status_location.count,
+							status: s.report.status_location.status
+						}
+					}
+				},
+				geometry:{
+					coordinates: [s.longitude, s.latitude],
+					type: 'Point'
+				}
+			}
+		})
+	}
+}
+
+export function flyBounds(width, height, features) {
+
+	return new PerspectiveMercatorViewport({width, height})
+				.fitBounds(features.map(( f ) => {
+					return f.geometry.coordinates.slice();
+				}));
+}
