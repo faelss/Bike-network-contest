@@ -9,6 +9,7 @@ import { makeGeojsonNetwork, makeGeojsonStation, flyBounds } from './utils';
 
 import NetworkInfo from './components/NetworkInfo';
 import StationInfo from './components/StationInfo';
+import Menu from './components/Menu';
 
 class App extends Component {
 
@@ -122,29 +123,36 @@ class App extends Component {
 		const { viewport, mapStyle, display, hoveredFeature, x, y } = this.state;
 
 		return (
-			<MapGl
-				{...viewport}
-				mapStyle={mapStyle}
-				onViewportChange={this._onViewportChange.bind(this)}
-				onHover={this._onHover.bind(this)}
-				onClick={this._onClick.bind(this)}
-				>
-				<div style={{position: 'absolute', right: 0}}>
-					<NavigationControl onViewportChange={this._onViewportChange.bind(this)}/>
-				</div>
-				<NetworkInfo 
-					info={hoveredFeature} 
-					left={x} 
-					top={y}
-					display={display}
-				/>
-				<StationInfo
-					info={hoveredFeature} 
-					left={x} 
-					top={y}
-					display={!display}
-				/>
-			</MapGl>
+			<div>
+				<MapGl
+					{...viewport}
+					mapStyle={mapStyle}
+					onViewportChange={this._onViewportChange.bind(this)}
+					onHover={this._onHover.bind(this)}
+					onClick={this._onClick.bind(this)}
+					>
+
+					<div style={{position: 'absolute', right: 0}}>
+						<NavigationControl onViewportChange={this._onViewportChange.bind(this)}/>
+					</div>
+					
+					<NetworkInfo 
+						info={hoveredFeature} 
+						left={x} 
+						top={y}
+						display={display}
+					/>
+					<StationInfo
+						info={hoveredFeature} 
+						left={x} 
+						top={y}
+						display={!display}
+					/>
+				</MapGl>
+
+				<Menu />
+				
+			</div>
 		);
 	}
 }
